@@ -73,10 +73,10 @@ No entanto, pode haver alguns casos específicos em que ajustes sejam necessári
 - Para fazer login como administrador.
 
   ```text
-http(s)://seu_endpoint_do_servidor/admin/login
+  http(s)://your_server_endpoint/admin/login
 
-Email: admin@example.com
-Senha: admin123
+  Email: admin@example.com
+  Password: admin123
   ```
 
 - Para fazer login como cliente. Você pode se registrar diretamente como cliente e depois fazer o login.
