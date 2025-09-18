@@ -1,6 +1,6 @@
-# Bagisto Dockerization
+# Dockerização do Bagisto
 
-The primary purpose of this repository is to provide a workspace along with all the necessary dependencies for Bagisto. In this repository, we include the following services:
+O objetivo principal deste repositório é fornecer um ambiente de trabalho com todas as dependências necessárias para o Bagisto. Neste repositório, incluímos os seguintes serviços:
 
 - PHP-FPM
 - Nginx
@@ -11,49 +11,50 @@ The primary purpose of this repository is to provide a workspace along with all 
 - Kibana
 - Mailpit
 
-## Supported Bagisto Version
+## Versão do Bagisto Suportada
 
-Currently, all these services are included to fulfill the dependencies for the following Bagisto version:
+Atualmente, todos esses serviços estão incluídos para atender às dependências da seguinte versão do Bagisto:
 
-**Bagisto Version:** v2.3.6 and up.
+**Versão do Bagisto:** v2.3.6 e superior.
 
-However, there may be some specific cases where adjustments are necessary. We recommend reviewing the `Dockerfile` or the `docker-compose.yml` file for any required modifications.
+No entanto, pode haver alguns casos específicos em que ajustes sejam necessários. Recomendamos revisar o arquivo `Dockerfile` ou `docker-compose.yml` para quaisquer modificações necessárias.
 
 > [!IMPORTANT]
-> If you are using the master version, there is a possibility that the current setup script in this repository is configured for **Bagisto dev-master**. The `.env` files located in the `.configs` folder are aligned with this version. If you plan to modify the script or switch the Bagisto version, please ensure that your changes remain compatible with the updated version. 
+> Se você estiver usando a versão master, existe a possibilidade de que o script de configuração atual neste repositório esteja configurado para o **Bagisto dev-master**. Os arquivos `.env` localizados na pasta `.configs` estão alinhados com esta versão. Se você planeja modificar o script ou alterar a versão do Bagisto, por favor, certifique-se de que suas alterações permaneçam compatíveis com a versão atualizada.
 
-## System Requirements
+## Requisitos do Sistema
 
-- System/Server requirements of Bagisto are mentioned [here](https://devdocs.bagisto.com/getting-started/before-you-start.html#system-requirements). Using Docker, these requirements will be fulfilled by docker images of PHP-FPM & Nginx, and our application will run in a multi-tier architecture.
+- Os requisitos de sistema/servidor do Bagisto são mencionados [aqui](https://devdocs.bagisto.com/getting-started/before-you-start.html#system-requirements). Usando o Docker, esses requisitos serão atendidos pelas imagens Docker do PHP-FPM e Nginx, e nossa aplicação rodará em uma arquitetura de múltiplas camadas.
 
-- Install latest version of Docker and Docker Compose if it is not already installed. Docker supports Linux, MacOS and Windows Operating System. Click [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/) to find their installation guide.
+- Instale a versão mais recente do Docker e do Docker Compose se ainda não estiverem instalados. O Docker suporta os sistemas operacionais Linux, MacOS e Windows. Clique em [Docker](https://docs.docker.com/install/) e [Docker Compose](https://docs.docker.com/compose/install/) para encontrar o guia de instalação deles.
 
-## Installation
+## Instalação
 
-- This is a straightforward repository with no complex configurations. Just update the `docker-compose.yml` file if needed, and you’re all set!
+- Este é um repositório simples, sem configurações complexas. Apenas atualize o arquivo `docker-compose.yml` se necessário, e você estará pronto!
 
-- Adjust your services as needed. For example, most Linux users have a UID of 1000. If your UID is different, make sure to update it according to your host machine.
+- Ajuste seus serviços conforme necessário. Por exemplo, a maioria dos usuários de Linux tem um UID de 1000. Se o seu UID for diferente, certifique-se de atualizá-lo de acordo com sua máquina host.
 
-  ```yml
+
+```yml
   services:
     php-fpm:
       build:
         args:
           container_project_path: /var/www/html/
-          uid: 1000 # add your uid here
+          uid: 1000 # adicione seu UID aqui
           user: $USER
         context: .
         dockerfile: ./Dockerfile
       image: php-fpm
       ports:
-        - "5173:5173" # Vite dev server port
+        - "5173:5173" # Porta do servidor de desenvolvimento Vite
       volumes:
         - ./workspace/:/var/www/html/
 
     nginx:
       image: nginx:latest
       ports:
-        - "80:80" # adjust your port here, if you want to change
+        - "80:80" # ajuste sua porta aqui, se quiser alterar
       volumes:
         - ./workspace/:/var/www/html/
         - ./.configs/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
@@ -61,43 +62,41 @@ However, there may be some specific cases where adjustments are necessary. We re
         - php-fpm
   ```
 
-- In this repository, the initial focus was on meeting all project requirements. Whether your project is new or pre-existing, you can easily copy and paste it into the designated workspace directory. If you’re unsure where to begin, a shell script has been provided to streamline the setup process for you. To install and set up everything, simply run:
+- Neste repositório, o foco inicial foi atender a todos os requisitos do projeto. Seja seu projeto novo ou pré-existente, você pode facilmente copiá-lo e colá-lo no diretório de trabalho designado. Se você não tem certeza por onde começar, um script shell foi fornecido para agilizar o processo de configuração para você. Para instalar e configurar tudo, basta executar:
 
   ```sh
   sh setup.sh
   ```
 
-## After installation
+## Após a instalação
 
-- To log in as admin.
-
-  ```text
-  http(s)://your_server_endpoint/admin/login
-
-  Email: admin@example.com
-  Password: admin123
-  ```
-
-- To log in as customer. You can directly register as customer and then login.
+- Para fazer login como administrador.
 
   ```text
-  http(s):/your_server_endpoint/customer/register
+http(s)://seu_endpoint_do_servidor/admin/login
+
+Email: admin@example.com
+Senha: admin123
   ```
 
-## Already Docker Expert?
+- Para fazer login como cliente. Você pode se registrar diretamente como cliente e depois fazer o login.
 
-- You can use this repository as your workspace. To build your container, simply run the following command:
+  ```text
+  http(s):/seu_endpoint_do_servidor/customer/register
+  ```
+
+## Já é um especialista em Docker?
+
+- Você pode usar este repositório como seu ambiente de trabalho. Para construir seu contêiner, simplesmente execute o seguinte comando:
 
   ```sh
   docker-compose build
   ```
 
-- After building, you can run the container with:
+- Após a construção, você pode executar o contêiner com:
 
   ```sh
   docker-compose up -d
   ```
 
-- Now, you can access the container's shell and install [Bagisto](https://github.com/bagisto/bagisto).
-
-In case of any issues or queries, raise your ticket at [Webkul Support](https://webkul.uvdesk.com/en/customer/create-ticket/).
+- Agora, você pode acessar o shell do contêiner e instalar o  [Bagisto](https://github.com/bagisto/bagisto).
